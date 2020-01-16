@@ -14,7 +14,6 @@ import javax.swing.SwingConstants;
 import java.awt.Point;
 import java.awt.Font;
 
-
 public class calcFrame extends JFrame {
 	Function func = new Function();
 	Getter get = new Getter();
@@ -57,7 +56,7 @@ public class calcFrame extends JFrame {
 		btn_clear.setForeground(Color.RED);
 		btn_clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				func.clear();
 			}
 		});
 		btn_clear.setBounds(6, 75, 40, 40);
@@ -127,6 +126,7 @@ public class calcFrame extends JFrame {
 		JButton btn_del = new JButton("Del");
 		btn_del.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				func.del();
 			}
 		});
 		btn_del.setBounds(90, 238, 40, 40);
@@ -254,6 +254,9 @@ public class calcFrame extends JFrame {
 		label_display.setBounds(6, 8, 167, 61);
 		contentPane.add(label_display);
 //		lblNewLabel.setText(getValue);
+		
+	}
+	public void setLabel() {
 		
 	}
 }
