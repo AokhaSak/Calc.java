@@ -1,7 +1,8 @@
 public class Getter {
-	void getValue(int number) {
+	String getValue(int number) {
 		String num = Integer.toString(number);
-		System.out.print(num);
+		return num;
+		
 	}
 	void getDot(String dot) {
 		System.out.print(dot);
