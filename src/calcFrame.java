@@ -21,13 +21,15 @@ import javax.swing.JTextField;
 
 public class calcFrame extends JFrame {
 	private JPanel contentPane;
-	public BigDecimal firstValue = BigDecimal.valueOf(0);
-	public BigDecimal secondValue = BigDecimal.valueOf(0);
+	public BigDecimal firstValue = BigDecimal.valueOf(0);	//最初の値を入れる変数
+	public BigDecimal secondValue = BigDecimal.valueOf(0);	//次の値を入れる変数
 	public int state;
 	public int labelValue;
 	public BigDecimal numInt;
 	public int opeType; //足し算:1, 引き算:2, 掛け算:3, 割り算:4, 除算:5
-	public String firstString;
+	public String firstString;	//表示用に文字変換して入れる変数
+	public BigDecimal Dec = BigDecimal.valueOf(10);	//Decimal(少数)に10を代入
+	public Boolean decState; //少数判定用ステートメント。少数ならTrue(1)を返す。
 
 	ArrayList<String> numList = new ArrayList<String>();
 	private JTextField textField;
@@ -66,6 +68,7 @@ public class calcFrame extends JFrame {
 				secondValue = BigDecimal.valueOf(0);
 				firstString = firstValue.toString();
 				textField.setText(firstString);
+				decState = false;
 			}
 		});
 		btn_clear.setBounds(6, 75, 40, 40);
@@ -75,8 +78,9 @@ public class calcFrame extends JFrame {
 		JButton btn_equal = new JButton("=");
 		btn_equal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				decState = false;
 				state = 10;
-				setLabel();
+				func();
 			}
 		});
 		btn_equal.setBounds(131, 238, 40, 40);
@@ -86,8 +90,9 @@ public class calcFrame extends JFrame {
 		JButton btn_per = new JButton("%");
 		btn_per.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				decState = false;
 				state = 5;
-				setLabel();
+				func();
 			}
 		});
 		btn_per.setBounds(48, 75, 40, 40);
@@ -97,8 +102,9 @@ public class calcFrame extends JFrame {
 		JButton btn_divide = new JButton("÷");
 		btn_divide.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				decState = false;
 				state = 1;
-				setLabel();
+				func();
 			}
 		});
 		btn_divide.setBounds(131, 75, 40, 40);
@@ -108,8 +114,9 @@ public class calcFrame extends JFrame {
 		JButton btn_multi = new JButton("×");
 		btn_multi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				decState = false;
 				state = 3;
-				setLabel();
+				func();
 			}
 		});
 		btn_multi.setBounds(90, 75, 40, 40);
@@ -121,8 +128,9 @@ public class calcFrame extends JFrame {
 		JButton btn_minus = new JButton("-");
 		btn_minus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				decState = false;
 				state = 2;
-				setLabel();
+				func();
 			}
 		});
 		btn_minus.setBounds(131, 117, 40, 40);
@@ -132,6 +140,7 @@ public class calcFrame extends JFrame {
 		JButton btn_del = new JButton("Del");
 		btn_del.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				decState = false;
 				
 			}
 		});
@@ -146,7 +155,7 @@ public class calcFrame extends JFrame {
 		JButton btn_dot = new JButton(".");
 		btn_dot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				decState = true;	//少数ステートをtrueに
 			}
 		});
 		btn_dot.setBounds(48, 238, 40, 40);
@@ -158,7 +167,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(0);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_0.setBounds(6, 238, 40, 40);
@@ -172,7 +181,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(2);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_2.setBounds(48, 199, 40, 40);
@@ -184,7 +193,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(3);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_3.setBounds(90, 199, 40, 40);
@@ -196,7 +205,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(4);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_4.setBounds(6, 158, 40, 40);
@@ -208,7 +217,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(5);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_5.setBounds(48, 158, 40, 40);
@@ -220,7 +229,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(6);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_6.setBounds(90, 158, 40, 40);
@@ -232,7 +241,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(7);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_7.setBounds(6, 117, 40, 40);
@@ -244,7 +253,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(8);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_8.setBounds(48, 117, 40, 40);
@@ -256,7 +265,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(9);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_9.setBounds(90, 117, 40, 40);
@@ -268,7 +277,7 @@ public class calcFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numInt = BigDecimal.valueOf(1);
 				state = 0;
-				setLabel();
+				func();
 			}
 		});
 		btn_1.setBounds(6, 199, 40, 40);
@@ -279,7 +288,7 @@ public class calcFrame extends JFrame {
 		btn_plus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				state = 1;
-				setLabel();
+				func();
 			}
 		});
 		btn_plus.setBounds(131, 158, 40, 81);
@@ -294,7 +303,14 @@ public class calcFrame extends JFrame {
 		textField.setColumns(10);
 	}
 
-	public void setLabel() {
+	public void func() {
+		if (decState == true) {
+			numInt = numInt.divide(Dec);
+			firstValue = firstValue.add(numInt);
+			firstString = firstValue.toString();
+			textField.setText(firstString);
+			Dec = Dec.multiply(BigDecimal.valueOf(10));
+		}
 		switch(state) {
 			//押されたボタンが数字だった場合
 			case 0:
