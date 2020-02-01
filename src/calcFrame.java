@@ -102,7 +102,7 @@ public class calcFrame extends JFrame {
 		btn_divide.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				decState = false;
-				state = 1;
+				state = 4;
 				func();
 			}
 		});
@@ -303,6 +303,11 @@ public class calcFrame extends JFrame {
 	}
 
 	public void func() {
+		int valuei = 0;
+		int calci = 0;
+		int setMax;
+		BigDecimal ash;
+		
 		if (decState == true) {
 
 			switch(state) {
@@ -333,8 +338,14 @@ public class calcFrame extends JFrame {
 						break;
 					//押されたボタンが＋の場合
 					case 1:
+//						if (arrayValue[counti - 1].replace(".","").isDigit() == true)　前回のボタンが演算子なら->＋＋ーみたいにならないようにする
 						firstValue = firstValue.add(secondValue);
-						secondValue = firstValue;
+						arrayValue[counti] = firstValue.toString();
+						counti += 1;	//中身カウント
+						arrayValue[counti] = "+";	//配列演算子を入れる
+						counti += 1;
+						
+//						secondValue = firstValue;
 						firstValue = BigDecimal.valueOf(0);
 						opeType = 1;
 						firstString = secondValue.toString();
@@ -342,6 +353,12 @@ public class calcFrame extends JFrame {
 						break;
 					//押されたボタンがーの場合
 					case 2:
+						firstValue = firstValue.add(secondValue);
+						arrayValue[counti] = firstValue.toString();
+						counti += 1;	//中身カウント
+						arrayValue[counti] = "-";	//配列演算子を入れる
+						counti += 1;
+						
 						secondValue = firstValue;
 						firstValue = BigDecimal.valueOf(0);
 						opeType = 2;
@@ -350,6 +367,12 @@ public class calcFrame extends JFrame {
 						break;
 					//押されたボタンが*の場合
 					case 3:
+						firstValue = firstValue.add(secondValue);
+						arrayValue[counti] = firstValue.toString();
+						counti += 1;	//中身カウント
+						arrayValue[counti] = "*";	//配列演算子を入れる
+						counti += 1;
+						
 						secondValue = firstValue;
 						firstValue = BigDecimal.valueOf(0);
 						opeType = 3;
@@ -358,6 +381,12 @@ public class calcFrame extends JFrame {
 						break;
 					//押されたボタンが÷の場合
 					case 4:
+						firstValue = firstValue.add(secondValue);
+						arrayValue[counti] = firstValue.toString();
+						counti += 1;	//中身カウント
+						arrayValue[counti] = "/";	//配列演算子を入れる
+						counti += 1;
+						
 						secondValue = firstValue;
 						firstValue = BigDecimal.valueOf(0);
 						opeType = 4;
@@ -366,6 +395,12 @@ public class calcFrame extends JFrame {
 						break;
 					//押されたボタンが%の場合
 					case 5:
+						firstValue = firstValue.add(secondValue);
+						arrayValue[counti] = firstValue.toString();
+						counti += 1;	//中身カウント
+						arrayValue[counti] = "rem";	//配列演算子を入れる
+						counti += 1;
+						
 						secondValue = firstValue;
 						firstValue = BigDecimal.valueOf(0);
 						opeType = 5;
@@ -373,39 +408,68 @@ public class calcFrame extends JFrame {
 						textField.setText(firstString);
 						break;
 					case 10:
-						switch(opeType) {
-							//足し算
-							case 1:
-								firstValue = firstValue.add(secondValue);
-								firstString = firstValue.toString();
-								textField.setText(firstString);
-								break;
-							//引き算
-							case 2:
-								firstValue = firstValue.subtract(secondValue);
-								firstString = firstValue.toString();
-								textField.setText(firstString);
-								break;
-							//掛け算
-							case 3:
-								firstValue = firstValue.multiply(secondValue);
-								firstString = firstValue.toString();
-								textField.setText(firstString);
-								break;
-							//割り算
-							case 4:
-								firstValue = firstValue.divide(secondValue);
-								firstString = firstValue.toString();
-								textField.setText(firstString);
-								break;
-							//余り
-							case 5:
-								firstValue = firstValue.remainder(secondValue);
-								firstString = firstValue.toString();
-								textField.setText(firstString);
-								break;
+						counti += 1;
+						arrayValue[counti] = "";
+						
+						while(arrayValue[valuei] == "") {
+							if(arrayValue[valuei] == "+") {
+								valuei ++;
+							} else if(arrayValue[valuei] == "-") {
+								arrayCalc[calci] = new BigDecimal(arrayValue[valuei + 1]).multiply(BigDecimal.valueOf(-1));
+								valuei += 2;
+								calci ++;
+							} else if(arrayValue[valuei] == "*") {
+								arrayCalc[calci - 1] = new BigDecimal(arrayValue[valuei - 1]).multiply(new BigDecimal(arrayValue[valuei + 1]));
+								valuei += 2;
+							} else if(arrayValue[valuei] == "/") {
+								arrayValue[valuei + 1] = BigDecimal.valueOf(1).divide(new BigDecimal(arrayValue[valuei + 1])).toString(); //分数にして計算 -> 1/3　みたいな
+								arrayValue[valuei] = "*";
+							} else if(arrayValue[valuei] == "rem") { //[%]が入らない！からremainderで妥協 -> ...cuz少数
+								arrayCalc[calci + 1] = new BigDecimal(arrayValue[valuei-1]).remainder(new BigDecimal(arrayValue[valuei + 1]));
+								valuei += 2;
+							} else {	//数字のとき
+								arrayCalc[calci] = new BigDecimal(arrayValue[valuei]);
+								valuei ++ ;
+								calci ++ ;
+							}
 						}
-						break;
+						setMax = calci - 1;
+						calci = 0;
+						ash = BigDecimal.valueOf(0);
+						while(calci > setMax) {
+							ash = ash.add(arrayCalc[calci]);
+							calci ++ ;
+						}
+						
+						textField.setText(ash.toString());
+//						switch(opeType) {
+//							case 1:
+//								firstValue = firstValue.add(secondValue);
+//								firstString = firstValue.toString();
+//								textField.setText(firstString);
+//								break;
+//							case 2:
+//								firstValue = firstValue.subtract(secondValue);
+//								firstString = firstValue.toString();
+//								textField.setText(firstString);
+//								break;
+//							case 3:
+//								firstValue = firstValue.multiply(secondValue);
+//								firstString = firstValue.toString();
+//								textField.setText(firstString);
+//								break;
+//							case 4:
+//								firstValue = firstValue.divide(secondValue);
+//								firstString = firstValue.toString();
+//								textField.setText(firstString);
+//								break;
+//							case 5:
+//								firstValue = firstValue.remainder(secondValue);
+//								firstString = firstValue.toString();
+//								textField.setText(firstString);
+//								break;
+//						}
+//						break;
 					default:
 						break;
 				}
